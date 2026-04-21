@@ -1,0 +1,12 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'BIZ UDPGothic', sans-serif;
+  background: linear-gradient(160deg, #e0f7fa 0%, #fce4ec 50%, #f3e5f5 100%);
+  min-height: 100vh;
+  color: #333;
+}

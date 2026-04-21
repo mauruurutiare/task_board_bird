@@ -36,6 +36,7 @@
   font-size: 1.6rem;
   -webkit-text-fill-color: initial;
   margin: 0 8px;
+  display: inline-block;
   animation: bob 2s ease-in-out infinite;
 }
 
@@ -45,7 +46,7 @@
   font-size: 0.95rem;
 }
 
-/* ===== Floating birds ===== */
+/* ===== Floating birds (header) ===== */
 .floating-birds {
   position: absolute;
   inset: 0;
@@ -58,12 +59,12 @@
   opacity: 0.35;
   animation: floatBird 6s ease-in-out infinite;
 }
-.float-bird-0 { top: 10%; left:  5%; animation-delay: 0s;    animation-duration: 5.5s; }
-.float-bird-1 { top: 60%; left: 90%; animation-delay: 0.8s;  animation-duration: 6.2s; }
-.float-bird-2 { top: 20%; left: 80%; animation-delay: 1.4s;  animation-duration: 5.8s; }
-.float-bird-3 { top: 75%; left: 10%; animation-delay: 2.0s;  animation-duration: 6.5s; }
-.float-bird-4 { top:  5%; left: 50%; animation-delay: 0.4s;  animation-duration: 5.2s; }
-.float-bird-5 { top: 50%; left: 45%; animation-delay: 1.8s;  animation-duration: 7.0s; }
+.float-bird-0 { top: 10%; left:  5%; animation-delay: 0s;   animation-duration: 5.5s; }
+.float-bird-1 { top: 60%; left: 90%; animation-delay: 0.8s; animation-duration: 6.2s; }
+.float-bird-2 { top: 20%; left: 80%; animation-delay: 1.4s; animation-duration: 5.8s; }
+.float-bird-3 { top: 75%; left: 10%; animation-delay: 2.0s; animation-duration: 6.5s; }
+.float-bird-4 { top:  5%; left: 50%; animation-delay: 0.4s; animation-duration: 5.2s; }
+.float-bird-5 { top: 50%; left: 45%; animation-delay: 1.8s; animation-duration: 7.0s; }
 
 @keyframes floatBird {
   0%, 100% { transform: translateY(0) rotate(-5deg); }
@@ -73,6 +74,41 @@
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-6px); }
+}
+
+/* ===== Celebration overlay ===== */
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.celebration-bird {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  animation: celebrateFly var(--dur, 2.5s) ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes celebrateFly {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(0.4);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.55;
+    transform: translate(calc(var(--dx) * 0.15), calc(var(--dy) * 0.15)) rotate(calc(var(--rot) * 0.15)) scale(1);
+  }
+  75% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.7);
+    opacity: 0;
+  }
 }
 
 /* ===== Mascot card ===== */
@@ -90,6 +126,7 @@
 
 .mascot-emoji {
   font-size: 3rem;
+  display: inline-block;
   animation: bob 2.5s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -117,18 +154,19 @@
   margin-bottom: 6px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .all-done {
   color: #e91e63;
   font-weight: 700;
-  animation: pulse 1s ease-in-out infinite alternate;
+  animation: pulse 0.9s ease-in-out infinite alternate;
 }
 
 @keyframes pulse {
   from { transform: scale(1); }
-  to   { transform: scale(1.05); }
+  to   { transform: scale(1.06); }
 }
 
 .progress-bar {
@@ -154,14 +192,17 @@
 
 .task-input {
   flex: 1;
-  padding: 12px 16px;
+  min-width: 0;
+  padding: 13px 16px;
   font-size: 1rem;
   border: 2px solid #e0e0e0;
   border-radius: 14px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   font-family: inherit;
   background: #fff;
+  /* prevent zoom on iOS */
+  font-size: max(16px, 1rem);
 }
 
 .task-input:focus {
@@ -170,7 +211,8 @@
 }
 
 .add-btn {
-  padding: 12px 20px;
+  flex-shrink: 0;
+  padding: 13px 20px;
   font-size: 0.95rem;
   font-weight: 700;
   border: none;
@@ -181,10 +223,13 @@
   transition: transform 0.15s, box-shadow 0.15s;
   white-space: nowrap;
   font-family: inherit;
+  /* touch target */
+  min-height: 48px;
+  touch-action: manipulation;
 }
 
 .add-btn:hover  { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,107,107,0.35); }
-.add-btn:active { transform: translateY(0); }
+.add-btn:active { transform: translateY(0); box-shadow: none; }
 
 /* ===== Task list ===== */
 .task-list {
@@ -206,10 +251,11 @@
   align-items: center;
   background: #fff;
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 6px 12px 6px 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transition: opacity 0.25s, background 0.25s;
-  gap: 8px;
+  gap: 4px;
+  min-height: 56px;
 }
 
 .task-item.done {
@@ -221,23 +267,34 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
   min-width: 0;
+  padding: 8px 4px;
 }
 
-/* Custom checkbox */
+/* Checkbox with larger touch target */
+.checkbox-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
 .task-checkbox {
   appearance: none;
   -webkit-appearance: none;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border: 2.5px solid #ccc;
   border-radius: 50%;
   flex-shrink: 0;
   cursor: pointer;
   position: relative;
   transition: border-color 0.2s, background 0.2s;
+  touch-action: manipulation;
 }
 
 .task-checkbox:checked {
@@ -261,6 +318,7 @@
   font-size: 1.3rem;
   flex-shrink: 0;
   transition: transform 0.2s;
+  line-height: 1;
 }
 
 .task-item:hover .task-bird-icon {
@@ -273,6 +331,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.25s, text-decoration 0.25s;
+  line-height: 1.4;
 }
 
 .task-item.done .task-text {
@@ -283,18 +342,19 @@
 /* ===== Delete button ===== */
 .delete-btn {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
   background: transparent;
   color: #ccc;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.15s, color 0.15s;
+  touch-action: manipulation;
 }
 
 .delete-btn:hover {
@@ -312,7 +372,14 @@
 
 /* ===== Responsive ===== */
 @media (max-width: 480px) {
-  .header { padding: 28px 16px 20px; }
+  .header { padding: 24px 16px 18px; }
   .mascot-card { gap: 12px; padding: 12px 14px; }
   .mascot-emoji { font-size: 2.4rem; }
+  .task-text { font-size: 0.95rem; }
+}
+
+@media (hover: none) {
+  /* タッチデバイスではホバーエフェクトを無効化 */
+  .add-btn:hover { transform: none; box-shadow: none; }
+  .task-item:hover .task-bird-icon { transform: none; }
 }
